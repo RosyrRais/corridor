@@ -1,0 +1,152 @@
+import type { Category, Model } from '@/types';
+
+export const mockCategories: Category[] = [
+  {
+    id: '1',
+    name: '建筑模型',
+    description: '各类建筑和结构模型',
+    slug: 'architecture',
+    createdAt: new Date('2024-01-01').toISOString(),
+  },
+  {
+    id: '2',
+    name: '工业设计',
+    description: '工业产品和机械设计模型',
+    slug: 'industrial',
+    createdAt: new Date('2024-01-02').toISOString(),
+  },
+  {
+    id: '3',
+    name: '角色模型',
+    description: '游戏和动画角色模型',
+    slug: 'characters',
+    createdAt: new Date('2024-01-03').toISOString(),
+  },
+  {
+    id: '4',
+    name: '场景环境',
+    description: '环境场景和地形模型',
+    slug: 'environments',
+    createdAt: new Date('2024-01-04').toISOString(),
+  },
+];
+
+export const mockModels: Model[] = [
+  {
+    id: '1',
+    name: '现代办公大楼',
+    description: '高度还原的现代办公建筑模型，包含完整的内部结构和外立面细节。',
+    categoryId: '1',
+    category: mockCategories[0],
+    images: [
+      'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800',
+      'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=800',
+    ],
+    specifications: {
+      '多边形数': '150,000',
+      '材质数量': '25',
+      '文件格式': 'FBX, OBJ, GLTF',
+      '纹理分辨率': '4K',
+    },
+    createdBy: '1',
+    createdAt: new Date('2024-02-01').toISOString(),
+    updatedAt: new Date('2024-02-01').toISOString(),
+  },
+  {
+    id: '2',
+    name: '工业机器人',
+    description: '精密的工业机器人模型，适用于工厂自动化场景展示。',
+    categoryId: '2',
+    category: mockCategories[1],
+    images: [
+      'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800',
+      'https://images.unsplash.com/photo-1563968743333-044cef800494?w=800',
+    ],
+    specifications: {
+      '多边形数': '85,000',
+      '材质数量': '15',
+      '文件格式': 'FBX, OBJ',
+      '动画': '是',
+    },
+    createdBy: '1',
+    createdAt: new Date('2024-02-05').toISOString(),
+    updatedAt: new Date('2024-02-05').toISOString(),
+  },
+  {
+    id: '3',
+    name: '科幻战士',
+    description: '未来风格的战士角色模型，包含完整装备和武器。',
+    categoryId: '3',
+    category: mockCategories[2],
+    images: [
+      'https://images.unsplash.com/photo-1535223289827-42f1e9919769?w=800',
+      'https://images.unsplash.com/photo-1551817958-d9d86fb29431?w=800',
+    ],
+    specifications: {
+      '多边形数': '120,000',
+      '材质数量': '30',
+      '文件格式': 'FBX, BLEND',
+      '骨骼绑定': '是',
+    },
+    createdBy: '1',
+    createdAt: new Date('2024-02-10').toISOString(),
+    updatedAt: new Date('2024-02-10').toISOString(),
+  },
+  {
+    id: '4',
+    name: '森林场景',
+    description: '茂密的森林环境场景，包含树木、植被和地形。',
+    categoryId: '4',
+    category: mockCategories[3],
+    images: [
+      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800',
+      'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?w=800',
+    ],
+    specifications: {
+      '多边形数': '500,000',
+      '材质数量': '45',
+      '文件格式': 'GLTF, FBX',
+      '场景大小': '1km x 1km',
+    },
+    createdBy: '1',
+    createdAt: new Date('2024-02-15').toISOString(),
+    updatedAt: new Date('2024-02-15').toISOString(),
+  },
+  {
+    id: '5',
+    name: '赛博朋克城市',
+    description: '未来主义城市场景，霓虹灯光效果。',
+    categoryId: '4',
+    category: mockCategories[3],
+    images: [
+      'https://images.unsplash.com/photo-1480714378408-67cf0d13bc1b?w=800',
+    ],
+    specifications: {
+      '多边形数': '800,000',
+      '材质数量': '60',
+      '文件格式': 'GLTF, FBX, OBJ',
+      '灯光': '动态',
+    },
+    createdBy: '1',
+    createdAt: new Date('2024-02-20').toISOString(),
+    updatedAt: new Date('2024-02-20').toISOString(),
+  },
+  {
+    id: '6',
+    name: '现代家具套装',
+    description: '完整的现代家具套装，包含沙发、茶几、椅子等。',
+    categoryId: '2',
+    category: mockCategories[1],
+    images: [
+      'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800',
+    ],
+    specifications: {
+      '多边形数': '45,000',
+      '材质数量': '12',
+      '文件格式': 'FBX, OBJ, BLEND',
+    },
+    createdBy: '1',
+    createdAt: new Date('2024-02-25').toISOString(),
+    updatedAt: new Date('2024-02-25').toISOString(),
+  },
+];
