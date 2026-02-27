@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import ModelCard from '@/components/ModelCard';
+import StickyHeader from '@/components/StickyHeader';
 import { mockModels, mockCategories } from '@/data/mockData';
 
 export default function Home() {
@@ -27,16 +28,10 @@ export default function Home() {
       className="min-h-[calc(100vh-4rem)] bg-zinc-50 dark:bg-zinc-900"
       onClick={handleBackgroundClick}
     >
-      <div className="bg-gradient-to-r from-zinc-900 to-zinc-700 dark:from-zinc-800 dark:to-zinc-950 py-16 px-4">
-        <div className="mx-auto max-w-7xl">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            专业模型展示平台
-          </h1>
-          <p className="text-xl text-zinc-300 max-w-2xl">
-            探索高质量的 3D 模型资源，涵盖建筑、工业设计、角色和场景等多个领域
-          </p>
-        </div>
-      </div>
+      <StickyHeader 
+        title="专业模型展示平台"
+        description="探索高质量的 3D 模型资源，涵盖建筑、工业设计、角色和场景等多个领域"
+      />
 
       <div className="mx-auto max-w-7xl px-4 py-8">
         <div className="mb-8 flex flex-col sm:flex-row gap-4" onClick={(e) => e.stopPropagation()}>
