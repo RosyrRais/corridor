@@ -3,6 +3,8 @@
 import { use } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { mockBlogPosts } from '@/data/blogData';
 
 export default function BlogPostPage({
@@ -90,24 +92,23 @@ export default function BlogPostPage({
               </div>
             </div>
 
-            <div 
-              className="prose prose-zinc dark:prose-invert max-w-none prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-p:text-zinc-700 dark:prose-p:text-zinc-300 prose-p:leading-relaxed prose-ul:my-4 prose-li:my-2"
-              dangerouslySetInnerHTML={{ 
-                __html: post.content.split('\n').map(line => {
-                  if (line.startsWith('# ')) {
-                    return `<h1>${line.slice(2)}</h1>`;
-                  } else if (line.startsWith('## ')) {
-                    return `<h2>${line.slice(3)}</h2>`;
-                  } else if (line.startsWith('### ')) {
-                    return `<h3>${line.slice(4)}</h3>`;
-                  } else if (line.trim() === '') {
-                    return '<br />';
-                  } else {
-                    return `<p>${line}</p>`;
-                  }
-                }).join('')
-              }}
-            />
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              className="prose prose-zinc dark:prose-invert max-w-none 
+                prose-headings:font-bold 
+                prose-h1:text-3xl prose-h1:mb-4 prose-h1:mt-8
+                prose-h2:text-2xl prose-h2:mb-3 prose-h2:mt-8
+                prose-h3:text-xl prose-h3:mb-2 prose-h3:mt-6
+                prose-p:text-zinc-700 dark:prose-p:text-zinc-300 prose-p:leading-relaxed prose-p:mb-4
+                prose-ul:my-4 prose-ul:space-y-2
+                prose-ol:my-4 prose-ol:space-y-2
+                prose-li:text-zinc-700 dark:prose-li:text-zinc-300
+                prose-strong:text-zinc-900 dark:prose-strong:text-zinc-100
+                prose-code:text-zinc-900 dark:prose-code:text-zinc-100 prose-code:bg-zinc-100 dark:prose-code:bg-zinc-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
+                prose-pre:bg-zinc-100 dark:prose-pre:bg-zinc-900 prose-pre:border prose-pre:border-zinc-200 dark:prose-pre:border-zinc-800"
+            >
+              {post.content}
+            </ReactMarkdown>
           </div>
         </div>
 
