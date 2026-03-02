@@ -3,13 +3,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
-import { mockCategories } from '@/data/mockData';
 import type { Category } from '@/types';
 
 export default function CategoriesPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
-  const [categories, setCategories] = useState<Category[]>(mockCategories);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -23,6 +23,26 @@ export default function CategoriesPage() {
       router.push('/');
     }
   }, [user, isLoading, router]);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const response = await fetch('/api/categories');
+        if (response.ok) {
+          const data = await response.json();
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch categories:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (user && user.role === 'admin') {
+      fetchCategories();
+    }
+  }, [user]);
 
   if (isLoading || !user) {
     return (
@@ -165,8 +185,13 @@ export default function CategoriesPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {categories.map((category) => (
+        {loading ? (
+          <div className="text-center py-16">
+            <p className="text-zinc-600 dark:text-zinc-400">加载中...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {categories.map((category) => (
             <div
               key={category.id}
               className="bg-white dark:bg-zinc-950 rounded-lg shadow-md p-6 border border-zinc-200 dark:border-zinc-800"
@@ -204,8 +229,9 @@ export default function CategoriesPage() {
                 创建于 {new Date(category.createdAt).toLocaleDateString('zh-CN')}
               </div>
             </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

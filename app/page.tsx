@@ -1,16 +1,46 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ModelCard from '@/components/ModelCard';
 import StickyHeader from '@/components/StickyHeader';
-import { mockModels, mockCategories } from '@/data/mockData';
+import type { Model, Category } from '@/types';
 
 export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
+  const [models, setModels] = useState<Model[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredModels = mockModels.filter((model) => {
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const [modelsResponse, categoriesResponse] = await Promise.all([
+          fetch('/api/models'),
+          fetch('/api/categories'),
+        ]);
+
+        if (modelsResponse.ok) {
+          const modelsData = await modelsResponse.json();
+          setModels(modelsData);
+        }
+
+        if (categoriesResponse.ok) {
+          const categoriesData = await categoriesResponse.json();
+          setCategories(categoriesData);
+        }
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  const filteredModels = models.filter((model) => {
     const matchesCategory = selectedCategory === 'all' || model.categoryId === selectedCategory;
     const matchesSearch = model.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          model.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -48,7 +78,7 @@ export default function Home() {
             className="px-4 py-2 border border-zinc-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-zinc-900 dark:focus:ring-zinc-100 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100"
           >
             <option value="all">全部分类</option>
-            {mockCategories.map((category) => (
+            {categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.name}
               </option>
@@ -67,7 +97,7 @@ export default function Home() {
           >
             全部
           </button>
-          {mockCategories.map((category) => (
+          {categories.map((category) => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
@@ -82,9 +112,15 @@ export default function Home() {
           ))}
         </div>
 
-        {filteredModels.length === 0 ? (
+        {loading ? (
           <div className="text-center py-16">
-            <p className="text-zinc-600 dark:text-zinc-400">未找到匹配的模型</p>
+            <p className="text-zinc-600 dark:text-zinc-400">加载中...</p>
+          </div>
+        ) : filteredModels.length === 0 ? (
+          <div className="text-center py-16">
+            <p className="text-zinc-600 dark:text-zinc-400">
+              {models.length === 0 ? '暂无模型' : '未找到匹配的模型'}
+            </p>
           </div>
         ) : (
           <>

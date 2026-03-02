@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, use } from 'react';
+import { useState, use, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { mockModels } from '@/data/mockData';
+import type { Model } from '@/types';
 
 export default function ModelDetailPage({
   params,
@@ -12,8 +12,37 @@ export default function ModelDetailPage({
 }) {
   const resolvedParams = use(params);
   const router = useRouter();
-  const model = mockModels.find((m) => m.id === resolvedParams.id);
+  const [model, setModel] = useState<Model | null>(null);
+  const [loading, setLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    async function fetchModel() {
+      try {
+        const response = await fetch(`/api/models/${resolvedParams.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setModel(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch model:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchModel();
+  }, [resolvedParams.id]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-zinc-50 dark:bg-zinc-900">
+        <div className="text-center">
+          <p className="text-zinc-600 dark:text-zinc-400">加载中...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!model) {
     return (

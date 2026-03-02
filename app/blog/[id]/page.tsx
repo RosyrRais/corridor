@@ -1,11 +1,11 @@
 'use client';
 
-import { use } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { mockBlogPosts } from '@/data/blogData';
+import type { BlogPost } from '@/types';
 
 export default function BlogPostPage({
   params,
@@ -14,7 +14,36 @@ export default function BlogPostPage({
 }) {
   const resolvedParams = use(params);
   const router = useRouter();
-  const post = mockBlogPosts.find((p) => p.id === resolvedParams.id);
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchPost() {
+      try {
+        const response = await fetch(`/api/blog/${resolvedParams.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setPost(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch post:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchPost();
+  }, [resolvedParams.id]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-zinc-50 dark:bg-zinc-900">
+        <div className="text-center">
+          <p className="text-zinc-600 dark:text-zinc-400">加载中...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!post) {
     return (

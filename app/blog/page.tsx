@@ -1,14 +1,34 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BlogCard from '@/components/BlogCard';
 import StickyHeader from '@/components/StickyHeader';
-import { mockBlogPosts } from '@/data/blogData';
+import type { BlogPost } from '@/types';
 
 export default function BlogPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const filteredPosts = mockBlogPosts.filter((post) => {
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        const response = await fetch('/api/blog');
+        if (response.ok) {
+          const data = await response.json();
+          setPosts(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchPosts();
+  }, []);
+
+  const filteredPosts = posts.filter((post) => {
     const matchesSearch =
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
@@ -33,9 +53,15 @@ export default function BlogPage() {
           />
         </div>
 
-        {filteredPosts.length === 0 ? (
+        {loading ? (
           <div className="text-center py-16">
-            <p className="text-zinc-600 dark:text-zinc-400">未找到匹配的文章</p>
+            <p className="text-zinc-600 dark:text-zinc-400">加载中...</p>
+          </div>
+        ) : filteredPosts.length === 0 ? (
+          <div className="text-center py-16">
+            <p className="text-zinc-600 dark:text-zinc-400">
+              {posts.length === 0 ? '暂无文章' : '未找到匹配的文章'}
+            </p>
           </div>
         ) : (
           <>
